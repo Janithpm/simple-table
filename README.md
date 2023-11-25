@@ -1,30 +1,50 @@
-# React + TypeScript + Vite
+# Simple Table
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Assumptions
+1. If render method is not provided for a particular column definition, field should be exactly match with the key of a data object.
+   <br>
+``Example: "Employee" column field "employee_name" is exactly matching with the key "employee_name" in the data set`` 
+1. Column with Should be given in pixels
 
-Currently, two official plugins are available:
+## How to use
+First import the SampleTable component from components folder
+```js
+import SampleTable from '@/components/SampleTable';
+```
+Next, define an array of objects which defines the column characteristic.
+each column should contain `header`, `field` and `width` properties. and can have a optional property called `cellRenderer` which is a function that returns a react component. 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
+`See the example below.`
 
 ```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+  const cols = [
+    { header: 'Employee', field: 'employee_name', width: 200 },
+    { header: 'EMP ID', width: 100, field: 'emp_id' },
+    { header: 'Duration', width: 200, field: 'duration' },
+    { header: 'Leave Type', width: 200, field: 'leave_type'},
+    { header: 'Reason', width: 200, field: 'reason' },
+    { header: 'Manager Name', width: 200, field: 'manager_name' },
+    { 
+      header: 'Manager Decision', 
+      width: 200, field: 'manager_decision', 
+      cellRenderer : (row: any) => {
+        return (
+          <Badge color="#2b63d2">{row.manager_decision}</Badge> 
+        )
+      }
+      }
+  ]
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+you can use render method to customize the cell content. The render method will receive the row data as a parameter and return a react component.
+
+Next, add the SampleTable component to your component with these mandatory parameters `columnDef` and `data`. as fallowing example.
+```js
+function ExampleComponent() {  
+  return (
+    <main>
+        <SimpleTable columnDef={cols} data={data} />
+    </main>
+  )
+}
+`
